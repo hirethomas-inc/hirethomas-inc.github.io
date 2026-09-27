@@ -1,0 +1,184 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import { Database, LineChart, Code2, Check, ArrowRight, ShieldCheck, Clock, FileSpreadsheet, Mail, Sparkles } from 'lucide-astro';
+
+const services = [
+  { icon: Database, name: 'Web data extraction', price: 'from $49', blurb: 'Public product listings, directories, listings, prices, reviews — pulled into a clean, deduplicated CSV or JSON with the exact fields you specify.',
+    points: ['Starter $49 · one site, up to 2,000 rows, 10 fields', 'Standard $149 · up to 25,000 rows or 3 sites, normalized', 'Free 50-row sample before you commit'] },
+  { icon: LineChart, name: 'Competitor Price Watch', price: '$39 / month', blurb: 'Every product and variant price at up to 10 competitors you choose, normalized by size, refreshed weekly with a list of what changed.', href: '/pricewatch',
+    points: ['One-off benchmark $49', 'Weekly CSV every Monday, cancel anytime', 'First full report free'] },
+  { icon: Code2, name: 'Scripts & fixes', price: 'from $59', blurb: 'Small Python or JavaScript scripts, scraper repairs, CSV/Excel transforms, API glue and one-off automations under ~200 lines.',
+    points: ['Delivered within 24 hours', 'Source code and a short README included', 'One free revision'] },
+];
+
+const steps = [
+  { n: '01', title: 'Send the request', text: 'Email the site URL(s), the fields you want, a rough row count and your preferred format. Two minutes, no forms to fill.' },
+  { n: '02', title: 'Get a free sample + fixed quote', text: 'Within about 12 hours you receive the first 50 rows and a fixed price. No sample, no charge — ever.' },
+  { n: '03', title: 'Approve, receive, pay', text: 'Say go. Full delivery lands within 48 hours with a methodology note. Pay the invoice by ACH or wire once you have the data.' },
+];
+
+const faq = [
+  { q: 'What sites can you extract data from?', a: 'Public web pages: e-commerce catalogs, directories, listings, review pages, public registries and APIs. We do not extract login-walled data unless it is your own account and you authorize it, and we do not build personal contact lists for unsolicited marketing.' },
+  { q: 'What format do I get?', a: 'CSV or JSON by default (Excel and Google Sheets open the CSV directly). Deduplicated, typed, with a short methodology note describing sources, run time and any caveats.' },
+  { q: 'How do I pay?', a: 'By invoice after delivery: ACH or wire to our US business account. Card payments are being added. Recurring services (Price Watch) are invoiced monthly and can be cancelled by replying "stop".' },
+  { q: 'Who actually does the work?', a: 'HireThomas, Inc. is a Delaware corporation. The extraction, normalization and quality checks are performed by AI systems the company operates, with a human owner responsible for the business. We say this plainly because you deserve to know how your data is produced — ask us anything about the method.' },
+  { q: 'What if the data is wrong or incomplete?', a: 'You review the free sample before committing, and every Standard job includes one free re-run within 7 days. If a delivery does not match the agreed specification, we fix it or you do not pay.' },
+];
+---
+<Base title="HireThomas — Web data extraction & competitor price monitoring, delivered as clean CSV/JSON" description="Tell us the site and the fields. Free 50-row sample within 12 hours, fixed quote, full delivery in 48 hours. Competitor Price Watch from $39/month." path="/">
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="grid-bg pointer-events-none absolute inset-0"></div>
+    <div class="glow pointer-events-none absolute inset-x-0 top-0 h-[520px]"></div>
+    <div class="relative mx-auto max-w-6xl px-4 pb-20 pt-20 sm:px-6 sm:pt-28">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-medium text-brand-800">
+          <Sparkles class="size-3.5" /> Free 50-row sample on every request
+        </span>
+        <h1 class="mt-6 text-4xl font-semibold tracking-tight text-slate-900 sm:text-6xl sm:leading-[1.05]">
+          Web data, delivered as a <span class="text-brand-600">clean spreadsheet</span> in 48 hours.
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+          Tell us the site and the fields you need. We send you the first 50 rows and a fixed quote — you only pay if it is exactly what you wanted.
+        </p>
+        <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="#quote" class="inline-flex h-12 items-center gap-2 rounded-xl bg-slate-900 px-6 text-[15px] font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800">
+            Request a free sample <ArrowRight class="size-4" />
+          </a>
+          <a href="/pricewatch" class="inline-flex h-12 items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 text-[15px] font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50">
+            See Competitor Price Watch
+          </a>
+        </div>
+        <dl class="mx-auto mt-14 grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-3">
+          {[['48h','typical full delivery'],['$49','starting price, fixed up front'],['0','payment before you see a sample']].map(([k,v]) => (
+            <div class="rounded-2xl border border-slate-200 bg-white/70 px-5 py-4 backdrop-blur">
+              <dt class="text-2xl font-semibold tracking-tight text-slate-900">{k}</dt>
+              <dd class="mt-1 text-sm text-slate-600">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <!-- Sample output card -->
+      <div class="mx-auto mt-16 max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5">
+        <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-2.5">
+          <div class="flex items-center gap-2 text-xs font-medium text-slate-600"><FileSpreadsheet class="size-4 text-emerald-600" /> pricewatch_sample_2026-09-27.csv</div>
+          <span class="rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">Real public data · US coffee roasters</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-[13px]">
+            <thead class="bg-white text-xs uppercase tracking-wide text-slate-500">
+              <tr>{['store','product','variant','price','size_oz','usd_per_12oz','available'].map(h => <th class="whitespace-nowrap px-4 py-2.5 font-medium">{h}</th>)}</tr>
+            </thead>
+            <tbody class="mono divide-y divide-slate-100 text-slate-700">
+              {[
+                ['bonescoffee.com','Birthday Suit | 12oz','Whole Bean','17.99','12.0','17.99','true'],
+                ['crockettcoffee.com','Organic Whole Bean Coffee','Wild Frontier Blend / Organic Roast','19.99','12.0','20.00','true'],
+                ['brownycoffee.com','Specialty Blends','Jacob / 12 OZ / Whole Bean','17.99','12.0','17.99','true'],
+                ['haya.coffee','Brazil San Jose (medium-light)','Whole Bean / 12 oz','18.00','12.0','18.00','true'],
+              ].map(r => <tr class="hover:bg-slate-50">{r.map(c => <td class="whitespace-nowrap px-4 py-2">{c}</td>)}</tr>)}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="border-t border-slate-200 bg-slate-50 py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="max-w-2xl">
+        <h2 class="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Three productized services. Fixed prices.</h2>
+        <p class="mt-4 text-lg leading-8 text-slate-600">Objective deliverables you can check before you pay. No retainers, no hourly billing.</p>
+      </div>
+      <div class="mt-12 grid gap-6 lg:grid-cols-3">
+        {services.map(s => (
+          <div class="flex flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition hover:shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="grid size-10 place-items-center rounded-xl bg-brand-50 text-brand-700"><s.icon class="size-5" /></span>
+              <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">{s.price}</span>
+            </div>
+            <h3 class="mt-5 text-lg font-semibold text-slate-900">{s.name}</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">{s.blurb}</p>
+            <ul class="mt-5 space-y-2.5">
+              {s.points.map(p => <li class="flex gap-2.5 text-sm text-slate-700"><Check class="mt-0.5 size-4 shrink-0 text-emerald-600" /><span>{p}</span></li>)}
+            </ul>
+            <div class="mt-auto pt-6">
+              <a href={s.href ?? '#quote'} class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800">{s.href ? 'Learn more' : 'Request a sample'} <ArrowRight class="size-4" /></a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section id="process" class="py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="grid gap-12 lg:grid-cols-5">
+        <div class="lg:col-span-2">
+          <h2 class="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">How it works</h2>
+          <p class="mt-4 text-lg leading-8 text-slate-600">Sample first, quote second, payment last. The order is deliberate: you should never pay for data you have not seen.</p>
+          <div class="mt-8 space-y-4 text-sm text-slate-700">
+            <div class="flex gap-3"><Clock class="mt-0.5 size-4 text-brand-600" /> Samples in ~12h, full delivery in 48h (longer jobs quoted explicitly).</div>
+            <div class="flex gap-3"><ShieldCheck class="mt-0.5 size-4 text-brand-600" /> Public data only. We respect robots directives and rate limits.</div>
+            <div class="flex gap-3"><Mail class="mt-0.5 size-4 text-brand-600" /> Plain email. No accounts, no dashboards to learn.</div>
+          </div>
+        </div>
+        <ol class="space-y-4 lg:col-span-3">
+          {steps.map(s => (
+            <li class="flex gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <span class="mono text-sm font-semibold text-brand-600">{s.n}</span>
+              <div>
+                <h3 class="font-semibold text-slate-900">{s.title}</h3>
+                <p class="mt-1.5 text-sm leading-6 text-slate-600">{s.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / disclosure -->
+  <section id="about" class="border-y border-slate-200 bg-slate-900 py-20 text-slate-200 sm:py-24">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-2">
+      <div>
+        <h2 class="text-3xl font-semibold tracking-tight text-white">Who is behind this</h2>
+        <p class="mt-4 leading-7 text-slate-300">HireThomas, Inc. is a Delaware corporation based in San Francisco. The data work — extraction, normalization and quality checks — is performed by AI systems operated by the company, with a human owner responsible for the business.</p>
+        <p class="mt-4 leading-7 text-slate-300">We say this plainly because you deserve to know how your data is produced. Ask us anything about the method; we will show you the sources and the checks we ran.</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {[['Public sources only','No login-walled or personal data. Robots and rate limits respected.'],['Fixed prices','You know the number before we start. No hourly surprises.'],['Verify before paying','Sample first, invoice after delivery.'],['Real company, real address','579 Connecticut Street, San Francisco, CA 94107.']].map(([t,d]) => (
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div class="font-semibold text-white">{t}</div>
+            <p class="mt-1.5 text-sm leading-6 text-slate-400">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20 sm:py-24">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6">
+      <h2 class="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Frequently asked questions</h2>
+      <div class="mt-10"><Faq items={faq} /></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="quote" class="pb-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 to-brand-800 px-6 py-14 text-center text-white shadow-xl sm:px-12">
+        <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Request your free sample</h2>
+        <p class="mx-auto mt-4 max-w-xl text-brand-100">Include the site URL(s), the fields you want, roughly how many rows, and the format. We reply within about 12 hours with 50 rows and a fixed quote.</p>
+        <a href="mailto:hirethomas.inc@proton.me?subject=Free%20sample%20request&body=Site%20URL(s)%3A%20%0AFields%3A%20%0AApprox.%20rows%3A%20%0AFormat%20(CSV%2FJSON)%3A%20" class="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-white px-6 text-[15px] font-semibold text-brand-800 shadow-lg transition hover:bg-brand-50">
+          <Mail class="size-4" /> hirethomas.inc@proton.me
+        </a>
+        <p class="mt-4 text-xs text-brand-200">No account, no card, no commitment.</p>
+      </div>
+    </div>
+  </section>
+</Base>
