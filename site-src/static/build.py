@@ -83,6 +83,7 @@ if ORIGIN:
     legacy = re.sub(r'(href|src)="(/[^"/]*)"',lambda m:m[1]+'="'+url(m[2])+'"',legacy)
 pages['pricewatch.html'] = legacy
 for name, text in pages.items():
+    text = text.replace('<br><span>', '<br> <span>')
     if ORIGIN: text = re.sub(r'href="#([^" ]*)"',lambda m:'href="'+url('/' if name=='index.html' else ('/pricewatch.html' if name=='pricewatch.html' else '/'+name.split('/')[0]+'/'))+'#'+m[1]+'"',text)
     p = ROOT/name
     p.parent.mkdir(parents=True,exist_ok=True)
