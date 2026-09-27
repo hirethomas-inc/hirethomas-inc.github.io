@@ -1,0 +1,39 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+interface Props { title: string; description: string; path?: string }
+const { title, description, path = '/' } = Astro.props;
+const canonical = new URL(path, Astro.site).toString();
+---
+<!doctype html>
+<html lang="en" class="antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'HireThomas, Inc.',
+      url: 'https://hirethomas-inc.github.io',
+      email: 'hirethomas.inc@proton.me',
+      address: { '@type': 'PostalAddress', streetAddress: '579 Connecticut Street', addressLocality: 'San Francisco', addressRegion: 'CA', postalCode: '94107', addressCountry: 'US' },
+    })} />
+  </head>
+  <body class="bg-white text-slate-800 font-sans selection:bg-brand-100 selection:text-brand-900">
+    <Nav />
+    <main><slot /></main>
+    <Footer />
+  </body>
+</html>
