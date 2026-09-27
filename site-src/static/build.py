@@ -80,10 +80,12 @@ legacy = re.sub(r'href="/pricewatch(?:\.html)?"',f'href="{url("/pricewatch.html"
 legacy = legacy.replace('href="/#quote"',f'href="{url("/contact/")}"').replace('href="/#process"',f'href="{url("/contact/")}"').replace('href="/#faq"',f'href="{url("/contact/")}"')
 legacy = legacy.replace('</head>',f'<link rel="stylesheet" href="{url("/services.css")}"></head>')
 if ORIGIN:
-    legacy = re.sub(r'(href|src)="(/[^"/]*)"',lambda m:m[1]+'="'+url(m[2])+'"',legacy)
+    legacy = re.sub(r'(href|src)="(/(?!/)[^"]*)"',lambda m:m[1]+'="'+url(m[2])+'"',legacy)
+    legacy = legacy.replace(url('/pricewatch')+'"',url('/pricewatch.html')+'"')
 pages['pricewatch.html'] = legacy
 for name, text in pages.items():
     text = text.replace('<br><span>', '<br> <span>')
+    text = text.replace('/services.css"', '/services.css?v=20260927b"')
     if ORIGIN: text = re.sub(r'href="#([^" ]*)"',lambda m:'href="'+url('/' if name=='index.html' else ('/pricewatch.html' if name=='pricewatch.html' else '/'+name.split('/')[0]+'/'))+'#'+m[1]+'"',text)
     p = ROOT/name
     p.parent.mkdir(parents=True,exist_ok=True)
