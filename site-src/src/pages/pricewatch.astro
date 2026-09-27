@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import { Check, ArrowRight, Mail, TrendingDown, TrendingUp, PackagePlus, PackageX, FileSpreadsheet, RefreshCw, Scale, Bell } from 'lucide-astro';
+
+const rows = [
+  ['bonescoffee.com','Birthday Suit | 12oz','Whole Bean','17.99','12.0','17.99'],
+  ['crockettcoffee.com','Organic Whole Bean Coffee','Wild Frontier Blend / Organic Roast','19.99','12.0','20.00'],
+  ['brownycoffee.com','Specialty Blends','Jacob / 12 OZ / Whole Bean','17.99','12.0','17.99'],
+  ['haya.coffee','Brazil San Jose (medium-light)','Whole Bean / 12 oz','18.00','12.0','18.00'],
+];
+const summary = [
+  ['bonescoffee.com','199','18.00','17.99'],
+  ['brownycoffee.com','199','14.25','17.99'],
+  ['crockettcoffee.com','13','18.00','17.99'],
+  ['haya.coffee','24','18.00','18.00'],
+];
+const features = [
+  { icon: Scale, t: 'Normalized by size', d: 'Prices per oz, per 12oz bag, per unit — so a 340g bag and a 12oz bag compare honestly.' },
+  { icon: RefreshCw, t: 'Refreshed weekly', d: 'A fresh CSV every Monday morning, with a changes tab against last week\'s snapshot.' },
+  { icon: Bell, t: 'Only what moved', d: 'Price increases, price cuts, new items, discontinued items and sale/compare-at prices, listed first.' },
+  { icon: FileSpreadsheet, t: 'Opens anywhere', d: 'Plain CSV. Excel, Google Sheets, Numbers, or your own pipeline. No dashboard login to remember.' },
+];
+const faq = [
+  { q: 'Which stores can you monitor?', a: 'Any store with public product pages. Shopify, WooCommerce, BigCommerce, Squarespace and custom storefronts are all fine. If a competitor site cannot be read reliably we tell you before you pay.' },
+  { q: 'Is this allowed?', a: 'We read the same public product pages any shopper can see, at a polite rate, respecting robots directives. We never log into accounts or collect personal data.' },
+  { q: 'Can I change competitors later?', a: 'Yes — reply to any weekly report with the new list. Up to 10 competitors are included; more can be quoted.' },
+  { q: 'How do I pay and cancel?', a: 'Monthly invoice by ACH or wire (card coming soon). Cancel any time by replying "stop"; you keep every report already delivered.' },
+];
+---
+<Base title="Competitor Price Watch — weekly competitor price spreadsheet for small online stores | HireThomas" description="Every product and variant price at up to 10 competitors you choose, normalized by size, refreshed weekly with what changed. $39/month, first report free." path="/pricewatch">
+  <section class="relative overflow-hidden border-b border-slate-200">
+    <div class="grid-bg pointer-events-none absolute inset-0"></div>
+    <div class="glow pointer-events-none absolute inset-x-0 top-0 h-[480px]"></div>
+    <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:py-28">
+      <div>
+        <span class="inline-flex items-center rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-medium text-brand-800">Competitor Price Watch</span>
+        <h1 class="mt-6 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl sm:leading-[1.08]">Know every competitor price change. Every week. Without checking ten websites.</h1>
+        <p class="mt-6 text-lg leading-8 text-slate-600">For small online stores — coffee, hot sauce, candles, supplements, pet, anything with a public storefront. We index your competitors' public product pages and send you one clean spreadsheet.</p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="#start" class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 text-[15px] font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800">Get the first report free <ArrowRight class="size-4" /></a>
+          <a href="#sample" class="inline-flex h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 text-[15px] font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50">See a sample</a>
+        </div>
+        <p class="mt-4 text-sm text-slate-500">$39/month · cancel anytime · or a one-off benchmark for $49</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-900/5">
+        <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">This week's changes · example</div>
+        <ul class="mt-4 divide-y divide-slate-100 text-sm">
+          <li class="flex items-center gap-3 py-3"><span class="grid size-8 place-items-center rounded-lg bg-rose-50 text-rose-600"><TrendingUp class="size-4" /></span><div class="flex-1"><div class="font-medium text-slate-900">Price increase</div><div class="text-slate-500">Competitor B · Espresso Blend 12oz</div></div><span class="mono text-slate-700">$18.00 → $19.50</span></li>
+          <li class="flex items-center gap-3 py-3"><span class="grid size-8 place-items-center rounded-lg bg-emerald-50 text-emerald-600"><TrendingDown class="size-4" /></span><div class="flex-1"><div class="font-medium text-slate-900">Price cut</div><div class="text-slate-500">Competitor D · Decaf 2lb</div></div><span class="mono text-slate-700">$42.00 → $38.00</span></li>
+          <li class="flex items-center gap-3 py-3"><span class="grid size-8 place-items-center rounded-lg bg-brand-50 text-brand-600"><PackagePlus class="size-4" /></span><div class="flex-1"><div class="font-medium text-slate-900">New product</div><div class="text-slate-500">Competitor A · Holiday Blend 12oz</div></div><span class="mono text-slate-700">$21.00</span></li>
+          <li class="flex items-center gap-3 py-3"><span class="grid size-8 place-items-center rounded-lg bg-slate-100 text-slate-500"><PackageX class="size-4" /></span><div class="flex-1"><div class="font-medium text-slate-900">Discontinued</div><div class="text-slate-500">Competitor C · Single Origin Peru</div></div><span class="mono text-slate-400">—</span></li>
+        </ul>
+        <p class="mt-3 text-[11px] text-slate-400">Illustrative layout of the changes tab; competitor names are placeholders.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {features.map(f => (
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <span class="grid size-10 place-items-center rounded-xl bg-brand-50 text-brand-700"><f.icon class="size-5" /></span>
+            <h3 class="mt-4 font-semibold text-slate-900">{f.t}</h3>
+            <p class="mt-1.5 text-sm leading-6 text-slate-600">{f.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="sample" class="border-y border-slate-200 bg-slate-50 py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="max-w-2xl">
+        <h2 class="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">What the spreadsheet looks like</h2>
+        <p class="mt-4 text-lg leading-8 text-slate-600">Real rows from public US coffee-roaster storefronts, indexed 2026-09-27. Your report has the same columns for the competitors you choose.</p>
+      </div>
+      <div class="mt-10 grid gap-6 lg:grid-cols-5">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:col-span-3">
+          <div class="border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-medium text-slate-600">Tab 1 · every product &amp; variant</div>
+          <div class="overflow-x-auto"><table class="w-full text-left text-[13px]">
+            <thead class="text-xs uppercase tracking-wide text-slate-500"><tr>{['store','product','variant','price','size_oz','usd_per_12oz'].map(h => <th class="whitespace-nowrap px-4 py-2.5 font-medium">{h}</th>)}</tr></thead>
+            <tbody class="mono divide-y divide-slate-100 text-slate-700">{rows.map(r => <tr>{r.map(c => <td class="whitespace-nowrap px-4 py-2">{c}</td>)}</tr>)}</tbody>
+          </table></div>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:col-span-2">
+          <div class="border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-medium text-slate-600">Tab 2 · per-store summary</div>
+          <div class="overflow-x-auto"><table class="w-full text-left text-[13px]">
+            <thead class="text-xs uppercase tracking-wide text-slate-500"><tr>{['store','variants','median $/12oz','12oz bag'].map(h => <th class="whitespace-nowrap px-4 py-2.5 font-medium">{h}</th>)}</tr></thead>
+            <tbody class="mono divide-y divide-slate-100 text-slate-700">{summary.map(r => <tr>{r.map(c => <td class="whitespace-nowrap px-4 py-2">{c}</td>)}</tr>)}</tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="grid gap-6 lg:grid-cols-2">
+        <div class="rounded-2xl border-2 border-slate-900 bg-white p-8 shadow-lg">
+          <div class="flex items-baseline justify-between"><h3 class="text-lg font-semibold text-slate-900">Weekly Price Watch</h3><span class="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">Most useful</span></div>
+          <div class="mt-4 flex items-baseline gap-1"><span class="text-4xl font-semibold tracking-tight text-slate-900">$39</span><span class="text-slate-500">/ month</span></div>
+          <ul class="mt-6 space-y-3 text-sm text-slate-700">
+            {['Up to 10 competitors you choose','Every product & variant, normalized by size','Changes tab: moves, new, discontinued, sale prices','Delivered every Monday as CSV','First full report free · cancel anytime'].map(p => <li class="flex gap-2.5"><Check class="mt-0.5 size-4 shrink-0 text-emerald-600" />{p}</li>)}
+          </ul>
+          <a href="#start" class="mt-8 inline-flex h-11 w-full items-center justify-center rounded-xl bg-slate-900 text-sm font-semibold text-white hover:bg-slate-800">Start with a free report</a>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <h3 class="text-lg font-semibold text-slate-900">One-off benchmark</h3>
+          <div class="mt-4 flex items-baseline gap-1"><span class="text-4xl font-semibold tracking-tight text-slate-900">$49</span><span class="text-slate-500">once</span></div>
+          <ul class="mt-6 space-y-3 text-sm text-slate-700">
+            {['Same spreadsheet, delivered once','Up to 10 competitors','Your store ranked per comparable item','Delivered within 48 hours','Upgrade to weekly any time'].map(p => <li class="flex gap-2.5"><Check class="mt-0.5 size-4 shrink-0 text-emerald-600" />{p}</li>)}
+          </ul>
+          <a href="#start" class="mt-8 inline-flex h-11 w-full items-center justify-center rounded-xl border border-slate-300 text-sm font-semibold text-slate-800 hover:bg-slate-50">Request a benchmark</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-slate-200 bg-slate-50 py-20 sm:py-24">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6">
+      <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Questions</h2>
+      <div class="mt-8"><Faq items={faq} /></div>
+    </div>
+  </section>
+
+  <section id="start" class="py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="rounded-3xl bg-gradient-to-br from-brand-600 to-brand-800 px-6 py-14 text-center text-white shadow-xl sm:px-12">
+        <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Get your first full report free</h2>
+        <p class="mx-auto mt-4 max-w-xl text-brand-100">Email your store URL and up to 10 competitor URLs. The complete report arrives before you pay anything — usually within 24 hours.</p>
+        <a href="mailto:hirethomas.inc@proton.me?subject=Price%20Watch%20-%20free%20first%20report&body=Our%20store%3A%20%0ACompetitors%20(up%20to%2010%20URLs)%3A%20%0A" class="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-white px-6 text-[15px] font-semibold text-brand-800 shadow-lg transition hover:bg-brand-50"><Mail class="size-4" /> hirethomas.inc@proton.me</a>
+        <p class="mt-4 text-xs text-brand-200">Reports are produced by AI systems operated by HireThomas, Inc., a Delaware corporation, with a human owner accountable for the business.</p>
+      </div>
+    </div>
+  </section>
+</Base>
