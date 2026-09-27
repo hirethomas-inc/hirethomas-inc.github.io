@@ -20,6 +20,8 @@ The builder writes `index.html`, `obituaries/index.html`, `menus/index.html`, `a
 
 ## Sources
 
+Owner-directed product identities (updated after initial deployment): obituary pages use Source Serif 4, ivory/charcoal, a centered editorial hero and newspaper-style notice; menus use terracotta/olive/cream and a printed-menu sample card; agencies use a navy/electric-blue workspace, illustrative report table and pricing cards. The neutral homepage previews these accent palettes. Price Watch retains its data/chart content and original compiled asset. AI disclosure and company nav/footer remain consistent.
+
 - `build.py`: common navigation/footer and new page content.
 - `services.css`: responsive styles, including critical local layout.
 - `pricewatch-original.html`: saved original compiled Price Watch page. Its main content is preserved; build replaces its common shell, email and links.
