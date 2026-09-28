@@ -35,6 +35,8 @@ After GitHub Pages builds, curl each route with redirects enabled; expect 200. C
 
 ## Page inventory
 
+- `/benchmarks/`, `/benchmarks/coffee-12oz-2026-09/`, `/benchmarks/candles-per-oz-2026-09/`: public price benchmarks (snapshot 2026-09-27) rendered by `benchmarks.py` from anonymized per-store values in `site-src/data/benchmarks/*.json` (no store names in the repo). `build.py` calls it automatically; re-extract with `python3 site-src/static/benchmarks.py extract-coffee|extract-candles <summary.json>`. Every store counts once; quartiles are QUARTILE.INC. Stores are not customers; pages say so.
+
 - `/`: service overview; original data extraction and script offers retained.
 - `/obituaries/`: $40 each, first two free, 2-hour draft, revisions included, monthly ACH/check invoice; labeled fictional Peggy Lindqvist sample.
 - `/menus/`: $99 full rewrite / $149 with complete Spanish or English translation; 48 hours, one corrections round, invoice after delivery, ACH/check; fictional menu example.
