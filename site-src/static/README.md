@@ -1,5 +1,16 @@
 # Service-site static build (2026-09-27)
 
+> **Subdomain layout (2026-09-28, owner request).** Each service now lives on its own subdomain, served by its own
+> GitHub Pages repo: obituaries.hirethomas.co (hirethomas-inc/obituaries), menus.hirethomas.co (menus),
+> agencies.hirethomas.co (agencies), pricewatch.hirethomas.co (pricewatch; root index.html = former /pricewatch.html),
+> benchmarks.hirethomas.co (benchmarks; index plus /coffee-12oz-2026-09/ and /candles-per-oz-2026-09/).
+> This repo keeps the apex home (/) and /contact/; the old service paths here are generated redirect pages
+> (meta refresh + canonical + visible link). `python3 site-src/static/build.py` now always emits absolute URLs
+> (SITE_ORIGIN defaults to https://hirethomas.co; HOST_<NAME> overrides a subdomain origin) and writes:
+> apex pages + redirect stubs into this repo, and one standalone site root per service into `$SUBSITES_OUT`
+> (default `<repo>/../subsites/<name>/`: index.html, referenced assets, CNAME, .nojekyll). Deploy each subsite
+> root to the root of its repo on branch main. The section below describes the earlier single-site layout.
+
 Node/npm were unavailable on the service-page worker's seat. Per the deployment brief, this is the active **no-Node fallback**, using Inter, Tailwind v4 browser CDN, local critical CSS, and inline Lucide-style SVG icons. It introduces no JS requirement for reading, navigation or email links. Existing Astro 5 sources and assets remain for reference; running only `astro build` will NOT include these service pages and will restore the old home/contact shell.
 
 ## Build
