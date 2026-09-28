@@ -1,0 +1,57 @@
+{
+ "slug": "candles-per-oz-2026-09",
+ "short": "candles $/oz",
+ "title": "Independent US candle makers: price per ounce benchmark, collected 2026-09-27",
+ "h1": "Independent US candle makers: price per ounce benchmark",
+ "description": "What {n} independent online candle makers charged per ounce on 2026-09-27: median {median}, quartiles, range and an anonymized ranked distribution from public Shopify storefront data.",
+ "intro": "Price per ounce across {n} independent online candle makers, taken from their public Shopify storefronts on 2026-09-27. Each store contributes one number: the median price per ounce of its available candle variants.",
+ "value_label": "Store median price per ounce (USD/oz)",
+ "table_label": "Median price per oz",
+ "collected": "2026-09-27",
+ "bin": 0.5,
+ "suffix": "/oz",
+ "method": [
+  "Source: each store's public Shopify storefront product listing (<span class=\"mono\">/products.json</span>), read on 2026-09-27 (run started 14:35 UTC). No logins, private data or purchases.",
+  "Products count as candles when the title, type or tags mention candle, jar, tin, wick, soy, coconut wax or beeswax. Excluded: wholesale, bulk, cases, sets and bundles, gift cards, wax melts and tarts, refills, accessories and non-candle goods such as soap.",
+  "Size is read from the variant or product title in ounces (grams converted at 28.3495 g/oz); only sizes from 2 to 40 oz, available variants and prices above $0 are used.",
+  "Per-store value: the median of price ÷ ounces across that store's matching variants.",
+  "N = {n} stores. Two stores from the same run were excluded before any statistics: one whose parsed values were implausible (a data-parsing failure), and one outside the intended scope. Median and quartiles use linear interpolation (spreadsheet QUARTILE.INC); each store counts once."
+ ],
+ "limitations": [
+  "A one-day snapshot (2026-09-27). Prices, promotions and availability change; the figures may already be out of date.",
+  "Listed prices only: shipping, taxes, discounts and bundles are not reflected. Ounces are as stated by each store (usually wax weight, sometimes vessel size), so products are not perfectly comparable.",
+  "Wax type, vessel, wick and fragrance load vary widely; price per ounce is a rough common unit, not a like-for-like comparison. Some stores also sell other goods; only their candle listings are counted.",
+  "A convenience sample of makers with readable public Shopify storefronts, not a random or complete census. “Independent” and “US” describe how the stores present themselves; we did not audit either.",
+  "The stores in this sample are not HireThomas customers. They did not commission, review or endorse this benchmark, and inclusion says nothing about their quality."
+ ],
+ "values": [
+  1.846,
+  1.869,
+  1.998,
+  2.0,
+  2.444,
+  2.714,
+  3.0,
+  3.0,
+  3.0,
+  3.125,
+  3.2,
+  3.214,
+  3.333,
+  3.333,
+  3.6,
+  3.625,
+  4.0,
+  4.154,
+  4.2,
+  5.417,
+  6.0,
+  6.095
+ ],
+ "source": {
+  "input_sha256": "1a405dd55bf9757f1a24de213aa778b75ddfc2d33b53513c6c8974ab9264e6ca",
+  "run": "2026-09-27T14:35Z",
+  "stores_in_input": 24,
+  "excluded": 2
+ }
+}
