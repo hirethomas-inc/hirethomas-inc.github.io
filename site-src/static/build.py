@@ -88,6 +88,20 @@ if ORIGIN:
     legacy = re.sub(r'(href|src)="(/(?!/)[^"]*)"',lambda m:m[1]+'="'+url(m[2])+'"',legacy)
     legacy = legacy.replace(url('/pricewatch')+'"',url('/pricewatch.html')+'"')
 pages['pricewatch.html'] = legacy
+
+# Secondary card-payment options; preserve invoice ordering.
+card_blocks = {'pricewatch.html': '<div class="card-payment-options" style="margin-top:1.5rem"><p style="margin:0.5rem 0">Weekly report · $39/mo — <a style="text-decoration:underline" href="https://buy.stripe.com/9B614p5HL0dacoGfNl6g807">Pay by card (Stripe)</a></p><p style="margin:0.5rem 0">One-off benchmark · $49 — <a style="text-decoration:underline" href="https://buy.stripe.com/8x2dRb9Y15xu1K29oX6g806">Pay by card (Stripe)</a></p><p style="font-size:0.875rem;margin-top:0.75rem">Invoice after delivery (ACH/check) remains available; for monthly plans we send the card link after you accept the free first report.</p></div>', 'obituaries/index.html': '<div class="card-payment-options" style="margin-top:1.5rem"><p style="margin:0.5rem 0">Per obituary · $40 — <a style="text-decoration:underline" href="https://buy.stripe.com/5kQ8wR4DH3pmcoGfNl6g808">Pay by card (Stripe)</a></p><p style="font-size:0.875rem;margin-top:0.75rem">Invoice after delivery (ACH/check) remains available; for monthly plans we send the card link after you accept the free first report.</p></div>', 'menus/index.html': '<div class="card-payment-options" style="margin-top:1.5rem"><p style="margin:0.5rem 0">Full menu · $99 — <a style="text-decoration:underline" href="https://buy.stripe.com/4gMeVfeeh7FC3SacB96g809">Pay by card (Stripe)</a></p><p style="margin:0.5rem 0">With translation · $149 — <a style="text-decoration:underline" href="https://buy.stripe.com/14AdRb3zD4tq60i8kT6g80a">Pay by card (Stripe)</a></p><p style="font-size:0.875rem;margin-top:0.75rem">Invoice after delivery (ACH/check) remains available; for monthly plans we send the card link after you accept the free first report.</p></div>', 'agencies/index.html': '<div class="card-payment-options" style="margin-top:1.5rem"><p style="margin:0.5rem 0">Per report · $49 — <a style="text-decoration:underline" href="https://buy.stripe.com/5kQcN74DH5xudsKbx56g80b">Pay by card (Stripe)</a></p><p style="margin:0.5rem 0">Per monitor · $39/mo — <a style="text-decoration:underline" href="https://buy.stripe.com/4gM8wRdad3pmdsK0Sr6g80c">Pay by card (Stripe)</a></p><p style="font-size:0.875rem;margin-top:0.75rem">Invoice after delivery (ACH/check) remains available; for monthly plans we send the card link after you accept the free first report.</p></div>'}
+for card_name, card_block in card_blocks.items():
+    card_html = pages[card_name]
+    if card_name == "pricewatch.html":
+        card_marker = "$39/month · cancel anytime · or a one-off benchmark for $49</p>"
+        card_html = card_html.replace(card_marker, card_marker + card_block)
+    else:
+        card_start = card_html.index('<section class="ordering">')
+        card_end = card_html.index("</section>", card_start)
+        card_html = card_html[:card_end-6] + card_block + card_html[card_end-6:]
+    pages[card_name] = card_html
+
 for name, text in pages.items():
     text = text.replace('<br><span>', '<br> <span>')
     text = text.replace('/services.css"', '/services.css?v=20260927b"')
