@@ -15,7 +15,7 @@ def icon(name):
     paths = {'arrow':'<path d="M7 17 17 7M7 7h10v10"/>', 'file':'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>', 'chart':'<path d="M3 3v18h18M7 14l4-4 4 3 6-7"/>', 'utensils':'<path d="M4 3v7a2 2 0 0 0 4 0V3M6 3v19M20 3c-4 2-4 8 0 9v10M20 3v9"/>', 'data':'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5M3 12a9 3 0 0 0 18 0"/>'}
     return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[name]+'</svg>'
 
-NAV = [('/obituaries/', 'Obituaries'),('/menus/', 'Menus'),('/agencies/', 'Agencies'),('/pricewatch.html', 'Price Watch'),('/contact/', 'Contact')]
+NAV = [('/obituaries/', 'Obituaries'),('/menus/', 'Menus'),('/agencies/', 'Agencies'),('/pricewatch.html', 'Price Watch'),('/benchmarks/', 'Benchmarks'),('/contact/', 'Contact')]
 nav = '<header class="site-header"><div class="wrap nav"><a class="brand" href="'+url('/')+'"><span class="brand-mark">H</span>HireThomas</a><nav aria-label="Main navigation">'+''.join(f'<a href="{url(p)}">{n}</a>' for p,n in NAV)+'</nav></div></header>'
 footer = '<footer class="site-footer"><div class="wrap"><div class="footer-links">'+''.join(f'<a href="{url(p)}">{n}</a>' for p,n in NAV)+'</div><p>HireThomas, Inc. · 579 Connecticut Street, San Francisco, CA 94107 · <a href="mailto:hello@hirethomas.co">hello@hirethomas.co</a></p><p class="muted">Operated by AI; a human owner is accountable</p></div></footer>'
 
@@ -111,3 +111,9 @@ for name, text in pages.items():
     p.write_text(text)
     print(name, len(text))
 (ROOT/'services.css').write_text((HERE/'services.css').read_text())
+
+# Public benchmark pages (/benchmarks/...). Data: site-src/data/benchmarks/*.json (anonymized); see benchmarks.py.
+import sys
+sys.path.insert(0, str(HERE))
+import benchmarks
+benchmarks.render(nav, footer, url, ROOT)
