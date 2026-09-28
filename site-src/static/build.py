@@ -1,15 +1,36 @@
 """No-Node static build. Run from any directory; preserves the original Price Watch content.
-SITE_ORIGIN=https://hirethomas.co python3 site-src/static/build.py after verifying domain.
+python3 site-src/static/build.py
+  -> apex pages (/, /contact/, services.css) + redirect stubs for the old service paths into this repo,
+  -> one standalone site root per service subdomain into $SUBSITES_OUT (default: <repo>/../subsites/<name>/),
+     each with index.html, the assets it references, CNAME and .nojekyll. Deploy each to repo hirethomas-inc/<name>.
+Env: SITE_ORIGIN (apex, default https://hirethomas.co); HOST_<NAME> overrides a service origin,
+e.g. HOST_MENUS=https://menus.hirethomas.co (default https://<name>.<apex host>).
 """
 from pathlib import Path
 from html import escape
 from urllib.parse import quote
-import os, re
+import os, re, shutil, json
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
-ORIGIN = os.environ.get('SITE_ORIGIN', '').rstrip('/')
-def url(path): return ORIGIN + path
+ORIGIN = (os.environ.get('SITE_ORIGIN', '') or 'https://hirethomas.co').rstrip('/')
+APEX_HOST = ORIGIN.split('://', 1)[1]
+# Service sections served from their own subdomain (repo hirethomas-inc/<name>). Old path prefix on the apex -> subdomain root.
+SECTIONS = ['obituaries', 'menus', 'agencies', 'pricewatch', 'benchmarks']
+HOSTS = {n: os.environ.get('HOST_' + n.upper(), f'https://{n}.{APEX_HOST}').rstrip('/') for n in SECTIONS}
+SUB_OUT = Path(os.environ.get('SUBSITES_OUT', ROOT.parent/'subsites')).resolve()
+STAGE = SUB_OUT/'.stage'
+if STAGE.exists(): shutil.rmtree(STAGE)
+def url(path):
+    """Map a site path (old single-site layout) to its absolute URL on the apex or a service subdomain."""
+    cut = min([i for i in (path.find('#'), path.find('?')) if i >= 0] or [len(path)])
+    p, suffix = path[:cut], path[cut:]
+    if p in ('/pricewatch', '/pricewatch.html', '/pricewatch/'):
+        return HOSTS['pricewatch'] + '/' + suffix
+    for n in SECTIONS:
+        if n != 'pricewatch' and (p == '/' + n or p.startswith('/' + n + '/')):
+            return HOSTS[n] + '/' + p[len(n) + 2:] + suffix
+    return ORIGIN + path
 def mail(subject): return 'mailto:hello@hirethomas.co?subject=' + quote(subject)
 def icon(name):
     paths = {'arrow':'<path d="M7 17 17 7M7 7h10v10"/>', 'file':'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>', 'chart':'<path d="M3 3v18h18M7 14l4-4 4 3 6-7"/>', 'utensils':'<path d="M4 3v7a2 2 0 0 0 4 0V3M6 3v19M20 3c-4 2-4 8 0 9v10M20 3v9"/>', 'data':'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5M3 12a9 3 0 0 0 18 0"/>'}
@@ -80,7 +101,8 @@ legacy = (HERE/'pricewatch-original.html').read_text()
 legacy = re.sub(r'<header\b.*?</header>',nav,legacy,flags=re.S)
 legacy = re.sub(r'<footer\b.*?</footer>',footer,legacy,flags=re.S)
 legacy = legacy.replace('hirethomas.inc@proton.me','hello@hirethomas.co')
-legacy = legacy.replace('https://hirethomas-inc.github.io',ORIGIN or '')
+legacy = legacy.replace('https://hirethomas-inc.github.io/pricewatch',url('/pricewatch.html'))
+legacy = legacy.replace('https://hirethomas-inc.github.io',ORIGIN)
 legacy = re.sub(r'href="/pricewatch(?:\.html)?"',f'href="{url("/pricewatch.html")}"',legacy)
 legacy = legacy.replace('href="/#quote"',f'href="{url("/contact/")}"').replace('href="/#process"',f'href="{url("/contact/")}"').replace('href="/#faq"',f'href="{url("/contact/")}"')
 legacy = legacy.replace('</head>',f'<link rel="stylesheet" href="{url("/services.css")}"></head>')
@@ -106,7 +128,7 @@ for name, text in pages.items():
     text = text.replace('<br><span>', '<br> <span>')
     text = text.replace('/services.css"', '/services.css?v=20260927b"')
     if ORIGIN: text = re.sub(r'href="#([^" ]*)"',lambda m:'href="'+url('/' if name=='index.html' else ('/pricewatch.html' if name=='pricewatch.html' else '/'+name.split('/')[0]+'/'))+'#'+m[1]+'"',text)
-    p = ROOT/name
+    p = STAGE/name
     p.parent.mkdir(parents=True,exist_ok=True)
     p.write_text(text)
     print(name, len(text))
@@ -116,4 +138,57 @@ for name, text in pages.items():
 import sys
 sys.path.insert(0, str(HERE))
 import benchmarks
-benchmarks.render(nav, footer, url, ROOT)
+benchmarks.render(nav, footer, url, STAGE)
+
+# ---------------------------------------------------------------- distribute: apex repo + one site root per subdomain
+APEX_FILES = ['index.html', 'contact/index.html']
+for name in APEX_FILES:
+    (ROOT/name).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(STAGE/name, ROOT/name)
+# stage path -> (section, path inside the subdomain site)
+moves = {'pricewatch.html': ('pricewatch', 'index.html')}
+for f in sorted(STAGE.rglob('*.html')):
+    rel = f.relative_to(STAGE).as_posix()
+    top = rel.split('/')[0]
+    if top in SECTIONS and '/' in rel:
+        moves[rel] = (top, rel.split('/', 1)[1])
+ASSET_SRC = {'services.css': HERE/'services.css'}
+for n in SECTIONS:
+    site = SUB_OUT/n
+    if site.exists(): shutil.rmtree(site)
+    site.mkdir(parents=True)
+    host = HOSTS[n]
+    for rel, (sec, dst) in moves.items():
+        if sec != n: continue
+        text = (STAGE/rel).read_text()
+        # Assets are served by each subdomain itself so the site is standalone.
+        for asset in ('/services.css', '/favicon.svg', '/_astro/'):
+            text = text.replace(ORIGIN + asset, host + asset)
+        for ref in set(re.findall(r'(?:href|src)="' + re.escape(host) + r'/([^"#?]+\.(?:css|svg|js|png|jpg|webp|ico))', text)):
+            src = ASSET_SRC.get(ref, ROOT/ref)
+            (site/ref).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(src, site/ref)
+        (site/dst).parent.mkdir(parents=True, exist_ok=True)
+        (site/dst).write_text(text)
+        print('subsite', n, dst, len(text))
+    (site/'CNAME').write_text(host.split('://', 1)[1] + '\n')
+    (site/'.nojekyll').write_text('')
+
+# Old apex paths -> small redirect pages (meta refresh + canonical + visible link).
+def redirect_page(target, label):
+    t = escape(target, quote=True)
+    return ('<!doctype html><html lang="en"><head><meta charset="utf-8"><title>' + escape(label) + ' has moved | HireThomas, Inc.</title>'
+            f'<meta http-equiv="refresh" content="0; url={t}"><link rel="canonical" href="{t}"><meta name="robots" content="noindex">'
+            f'<meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="{url("/favicon.svg")}" type="image/svg+xml">'
+            f'<script>location.replace({json.dumps(target)}+location.hash)</script></head>'
+            f'<body style="font-family:system-ui,sans-serif;max-width:40rem;margin:4rem auto;padding:0 1rem;line-height:1.6">'
+            f'<p>{escape(label)} has moved to <a href="{t}">{t}</a>.</p>'
+            f'<p><a href="{url("/")}">HireThomas, Inc. home</a> · <a href="{url("/contact/")}">Contact</a></p></body></html>\n')
+LABELS = {'obituaries': 'Obituary drafting', 'menus': 'Menu rewriting', 'agencies': 'Agency data & reporting', 'pricewatch': 'Competitor Price Watch', 'benchmarks': 'Benchmarks'}
+for rel, (sec, dst) in sorted(moves.items()):
+    old = '/' + (rel[:-len('index.html')] if rel.endswith('index.html') else rel)
+    target = url(old)
+    (ROOT/rel).parent.mkdir(parents=True, exist_ok=True)
+    (ROOT/rel).write_text(redirect_page(target, LABELS[sec]))
+    print('redirect', old, '->', target)
+shutil.rmtree(STAGE)
