@@ -1,0 +1,3 @@
+record,column,action,before,after
+2,label,trim, Blue mug ,Blue mug
+3,,remove_exact_duplicate_after_selected_transforms,,

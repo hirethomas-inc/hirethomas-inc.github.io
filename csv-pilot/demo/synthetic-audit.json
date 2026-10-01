@@ -1,0 +1,23 @@
+{
+  "source_sha256": "b06ff0873bea25ea9fa7c3cc42b207513cd7e34b14aab12e790a220c197ec6f2",
+  "input_records": 4,
+  "output_records": 3,
+  "columns": [
+    "synthetic_id",
+    "label",
+    "quantity_text",
+    "note"
+  ],
+  "trim_enabled": true,
+  "dedupe_enabled": true,
+  "duplicate_records_after_selected_transforms": 1,
+  "blank_cells_output": {
+    "synthetic_id": 0,
+    "label": 0,
+    "quantity_text": 1,
+    "note": 0
+  },
+  "formula_like_cells_input": [],
+  "warning": "CSV values are text. Formula-like values are preserved, not made spreadsheet-safe. Inspect before opening in spreadsheet software. No dates, IDs, currencies or missing values inferred.",
+  "record_number_definition": "Logical CSV record, header=1; multiline cells may span physical lines."
+}

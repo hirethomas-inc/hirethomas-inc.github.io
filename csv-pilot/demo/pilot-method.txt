@@ -1,0 +1,3 @@
+# CSV audit pilot
+
+Conservative local CSV audit using only Python's standard library. The source is never overwritten. Trimming is global to every data cell when explicitly enabled; deduplication compares complete transformed rows and keeps the first occurrence. Formula-like values are preserved and flagged, not spreadsheet-safe.

@@ -1,0 +1,4 @@
+synthetic_id,label,quantity_text,note
+001,Blue mug,02,Mock data only
+002,Red mug,,Mock missing quantity - left blank
+003,Green mug,03,"Mock note, with comma"
